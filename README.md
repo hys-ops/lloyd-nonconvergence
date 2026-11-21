@@ -21,9 +21,11 @@ $$
 
 The construction chooses a sequence approaching every equatorial direction, prescribes these gradients along it, and realizes the potential as the angular moment of a probability law.
 
-## Where the question came from
+## Where the proof came from
 
-A midpoint coupling in [the OpenAI Brenier preprint, Section 4](https://github.com/openai/math/blob/4eaee87548250b2682affda7d05d947c05554bae/preprints/Sharp-One-Third-Stability-of-Brenier-Maps-September-25-2026/build/source/sections/moments.tex#L8-L32) led to a finite comparison of two power-cell partitions and a descent certificate for one inexact Lloyd step. That certificate **motivated** the question about exact long-run dynamics; the nonconvergence proof does not use the finite inequality. It starts from the separate exact centroid identity above. The research diagram marks that difference with solid lines for mathematical dependence and a dashed line for motivation. This record does not assert historical priority.
+We extracted a finite cell-moment comparison from the midpoint coupling in [the OpenAI Brenier preprint, Section 4](https://github.com/openai/math/blob/4eaee87548250b2682affda7d05d947c05554bae/preprints/Sharp-One-Third-Stability-of-Brenier-Maps-September-25-2026/build/source/sections/moments.tex#L8-L32). It shortened the original stability proof and gave a certificate for one inexact Lloyd step. This led us to ask whether exact Lloyd steps must converge.
+
+We kept the same starting quantity, the first moment of a cell. For an antipodal pair it is a hemisphere moment, and the directional moment function $H$ encodes the exact update through its spherical gradient. We used this form to construct a nonconvergent orbit in three dimensions, then extended the orbit construction and moment realization to every $n\geq3$. The exact proof uses the directional identity above rather than the finite harmonic-mean bound for comparing cells. This record does not assert historical priority.
 
 ## Files
 
