@@ -29,6 +29,7 @@ A midpoint coupling in [the OpenAI Brenier preprint, Section 4](https://github.c
 
 - [Preprint PDF](Lloyd_preprint.pdf): the complete argument, its scope, and literature comparison.
 - [Research-path diagram](Lloyd_Research_Path.html): the development from transport comparison to the exact-orbit theorem. Download and open locally if GitHub shows the HTML source.
+- [Brenier endpoint-moment tool (PDF)](Brenier_Endpoint_Moment_Tool.pdf)
 - [Lean reproduction packet](Lloyd_Lean_Reproduction.zip): local source, pinned toolchain and dependencies, verification scripts and archived logs. Start with the README inside it. The central declaration is `LloydNDVerified.projective_lloyd`. It verifies the mathematical existence statement by a related formal construction, not the manuscript’s literature assessments.
 
 Lean and mathlib and the other upstream dependencies listed in the packet’s `lean/lake-manifest.json` are fetched separately, remain subject to their own upstream licenses and notices, and are not redistributed here.
