@@ -59,6 +59,8 @@ Lean derives static quadratic optimal transport and midpoint domination, and pro
 
 The archived Lean 4.34.1 run records a clean build and kernel replay of 122 proof modules across both projects; the audited declarations use only `propext`, `Classical.choice` and `Quot.sound`. The natural-language statements and their correspondence to the formal definitions remain open to independent review.
 
+[Download the Lean sources, archived logs, and replay instructions](sg-ranks-lean-replay.zip). Extract the ZIP into a fresh directory and run `bash verify.sh` from that directory.
+
 ## Relation to the endpoint tool
 
 The [Brenier endpoint-moment tool](brenier-endpoint-moment-tool.md) suggested this application and gives another route to the one-observation bound. The proof here needs only the classical convex-gradient change of variables and a midpoint calculation. It does not replace the more general endpoint comparison, in particular at singular destinations. These are expected-loss results, not runtime or realized-path guarantees. This AI-assisted research note makes no priority claim and has not undergone independent human review.
