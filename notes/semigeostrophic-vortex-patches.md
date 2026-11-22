@@ -44,4 +44,6 @@ The transport input comes from the project’s [finite Brenier cell-moment estim
 
 The archived Lean 4.34.1 run records a clean build and kernel replay of 122 proof modules across both projects; the audited declarations use only `propext`, `Classical.choice` and `Quot.sound`.
 
+[Download the Lean sources, archived logs, and replay instructions](sg-ranks-lean-replay.zip). Extract the ZIP into a fresh directory and run `bash verify.sh` from that directory.
+
 This AI-assisted note makes no priority claim and has not undergone independent human review. See also the [Brenier tool page](brenier-endpoint-moment-tool.md).
