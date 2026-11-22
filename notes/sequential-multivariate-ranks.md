@@ -53,6 +53,12 @@ $$
 $$
 An independent upper check in this example is to estimate $\theta$ by the clipped sample mean of $-2\cos(\pi X)\cos(\pi Y)$ on the past. Its expectation before clipping is $\theta$ by direct integration and its mean squared error after clipping is at most $4/n$. Since $|v|\le1/\pi$, the cumulative upper bound is $O(\log(1+T))$.
 
+## Lean verification
+
+Lean checks the same-observation bound with constant $16R^2$ from the endpoint pushforwards and midpoint domination, including vanishing densities, and its finite-KL consequence. It checks the density-form KL chain rule, the finite-mixture oracle bound, the one-date lower bound $1/(32\pi^2)$ in the square example, and the numerical logarithmic lower bound conditional on the stated information and risk estimates. For jointly measurable normalized conditional densities with compact supports and the stated base measure assumptions, Lean also constructs a jointly measurable rank-map representative valid for every history. This assumes the static existence of a unique cyclically monotone transport plan for each history and its realization by a map. The formal construction uses disintegration rather than the dyadic-cell exposition above. Deriving midpoint domination from optimal transport and proving the full minimax theorems remain external.
+
+The archived Lean 4.34.1 verification reports a clean build and kernel replay of 23 proof modules. The audited declarations use only `propext`, `Classical.choice` and `Quot.sound`; this does not certify the steps listed as external.
+
 ## Relation to the endpoint tool
 
 The [Brenier endpoint-moment tool](brenier-endpoint-moment-tool.md) suggested this application and gives another route to the one-observation bound. The proof here needs only the classical convex-gradient change of variables and a midpoint calculation. It does not replace the more general endpoint comparison, in particular at singular destinations. These are expected-loss results, not runtime or realized-path guarantees. This AI-assisted research note makes no priority claim and has not undergone independent human review.
