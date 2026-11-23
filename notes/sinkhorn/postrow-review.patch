@@ -1,0 +1,86 @@
+--- a/ot/bregman/_sinkhorn.py
++++ b/ot/bregman/_sinkhorn.py
+@@ -495,6 +495,9 @@
+     log=False,
+     warn=True,
+     warmstart=None,
++    plan_tv_tol=None,
++    _review_factor='geometry',
++    _review_probes=(0, 4, 7, 9),
+     **kwargs,
+ ):
+     r"""
+@@ -620,6 +623,28 @@
+ 
+     K = nx.exp(M / (-reg))
+ 
++    # Local review prototype for a single positive CPU float64 histogram.
++    # The underscored switches exist only to isolate the stopping rule.
++    if plan_tv_tol is not None:
++        if (any(type(x) is not np.ndarray or x.dtype != np.float64 for x in (a, b, M))
++                or a.ndim != 1 or b.ndim != 1 or min(M.shape) < 2
++                or M.shape != (a.size, b.size) or warmstart is not None):
++            raise ValueError("review mode needs one NumPy float64 histogram per side")
++        if (not np.isfinite(plan_tv_tol) or plan_tv_tol <= 0
++                or not np.isfinite(stopThr) or stopThr <= 0 or not np.isfinite(reg) or reg <= 0
++                or not np.all(a > 0) or not np.all(b > 0)
++                or abs(a.sum() - 1.) > 8e-15 or abs(b.sum() - 1.) > 8e-15):
++            raise ValueError("review mode needs finite positive tolerances and probability weights")
++        lo, hi = K.min(), K.max()
++        if not (lo > 1e-280 and hi < 1e100):
++            raise ValueError("kernel outside the tested numerical range")
++        count = b.size - 1
++        factor = float(count)
++        if _review_factor == 'geometry' and hi < (2*count-1)*lo:
++            factor = (1 + hi/lo)/2
++        reached = False
++        bound = np.inf
++
+     Kp = (1 / a).reshape(-1, 1) * K
+ 
+     err = 1
+@@ -643,7 +668,7 @@
+             u = uprev
+             v = vprev
+             break
+-        if ii % 10 == 0:
++        if (ii % 10 in _review_probes if plan_tv_tol is not None else ii % 10 == 0):
+             # we can speed up the process by checking for the error only all
+             # the 10th iterations
+             if n_hists:
+@@ -655,8 +680,19 @@
+             if log:
+                 log["err"].append(err)
+ 
+-            if err < stopThr:
+-                break
++            if plan_tv_tol is None:
++                if err < stopThr:
++                    break
++            elif err < stopThr:
++                bound = factor * 0.5 * np.abs(tmp2 - b).sum()
++                if bound < plan_tv_tol:
++                    candidate = u[:, None] * K * v[None, :]
++                    col = candidate.sum(axis=0) - b
++                    bound = factor * 0.5 * np.abs(col).sum()
++                    if (bound < plan_tv_tol and np.linalg.norm(col) < stopThr
++                            and np.linalg.norm(candidate.sum(axis=1) - a) < stopThr):
++                        reached = True
++                        break
+             if verbose:
+                 if ii % 200 == 0:
+                     print("{:5s}|{:12s}".format("It.", "Err") + "\n" + "-" * 19)
+@@ -668,6 +704,13 @@
+                 "increase the number of iterations `numItermax` "
+                 "or the regularization parameter `reg`."
+             )
++    if plan_tv_tol is not None:
++        if not reached:
++            raise RuntimeError("plan TV tolerance not reached or numerical failure")
++        if log:
++            log.update(niter=ii, u=u, v=v, plan_tv_estimate=bound)
++            return candidate, log
++        return candidate
+     if log:
+         log["niter"] = ii
+         log["u"] = u

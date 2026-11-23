@@ -1,0 +1,10 @@
+{
+  "source_revision": "367355d757223e39989e384b7a93d0537b1547ea",
+  "imported_native_extensions_from": "0.9.7",
+  "sha256": {
+    "ot/bsp/bsp_wrap.cpython-312-x86_64-linux-gnu.so": "3740c4421f33f26a37853ff87839872778c508b99b6c7ff1d64be5eee9c94f9e",
+    "ot/lp/emd_wrap.cpython-312-x86_64-linux-gnu.so": "dda7bfdd447fc78f08ad2c6aed6e2cf248040cbe2ad4cb608ee2837cb797d636",
+    "ot/partial/partial_cython.cpython-312-x86_64-linux-gnu.so": "44053a81eb82af168513aab023178cb0557b84e1749ab477e12ca1fb32e1b3e9"
+  },
+  "mode": "Pinned Python sources plus release-wheel native modules for package import"
+}

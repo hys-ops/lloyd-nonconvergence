@@ -1,0 +1,8 @@
+Release 0.1.0 vs POT 0.9.7, one thread, 27 settings
+Whole replacement: 1.82689604x; matched code on/off (all): 0.97849309x
+Matched code on/off (triggered 11): 1.09883586x
+Maximum TV vs stock: 4.62209496e-12
+Maximum TV vs tighter numerical reference: 2.04768562e-08
+MNIST 900; reg 0.02: 19762 -> 19762 updates; 407.29369 -> 441.46322 ms (both from grid_time.csv)
+MNIST 900; reg 0.12: 4317 -> 3229 updates; 102.57400 -> 104.23943 ms (both from grid_time.csv)
+MNIST 900; reg 0.24: 3211 -> 2178 updates; 73.60737 -> 66.62483 ms (both from grid_time.csv)

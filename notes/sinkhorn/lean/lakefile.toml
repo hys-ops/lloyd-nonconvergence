@@ -1,0 +1,12 @@
+name = "sinkhornAudit"
+version = "1.0.0"
+defaultTargets = ["Audit"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "d13f23b723b8a846827a245b89c10fc7d3f11612"
+
+[[lean_lib]]
+name = "Audit"
+roots = ["ManyRows", "ScalingCuts", "HalfSteps", "PlanCertificate", "ScalingLimits", "Alternation", "EntropicPlan", "RuntimeBounds", "GibbsStop", "DenseChecks", "CacheReuse", "CachedKernel", "PairedCertificate", "SummaryBridge", "SquaredGeometry", "CertifiedExit", "Audit"]

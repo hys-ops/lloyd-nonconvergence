@@ -1,0 +1,7 @@
+Many_Row_Sinkhorn_Reproduction.zip :: many_rows/lean/ManyRows.lean
+SHA-256 1508aed20fbe4aa0eb815a473d2a495660bda124b39afa3edc52bd823a939851
+Archive and inspected source are byte-identical.
+
+Residual_Sinkhorn_0_2_0_Reproduction.zip :: src/residual_sinkhorn/__init__.py
+SHA-256 89bbe01cf84660e76994d6055fee5e2a5d35ca23541b41cd4d72a4696e49500a
+Archive and inspected source are byte-identical.

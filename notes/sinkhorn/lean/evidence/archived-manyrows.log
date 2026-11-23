@@ -1,0 +1,15 @@
+Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)
+d13f23b723b8a846827a245b89c10fc7d3f11612
+1508aed20fbe4aa0eb815a473d2a495660bda124b39afa3edc52bd823a939851  ManyRows.lean
+Clean project build passed
+'ManyRows.odds_gap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ManyRows.subset_gap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ManyRows.abs_sum_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ManyRows.paired_transfer' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ManyRows.sum_corrections' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ManyRows.mixture_gap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ManyRows.residual_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ManyRows.diagonal_cross' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ManyRows.limit_certificate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ManyRows.scaled_kernel_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ManyRows.correction_size' depends on axioms: [propext, Classical.choice, Quot.sound]

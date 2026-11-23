@@ -1,0 +1,17 @@
+ManyRows.lean: OK
+ScalingCuts.lean: OK
+HalfSteps.lean: OK
+ScalingLimits.lean: OK
+EntropicPlan.lean: OK
+PlanCertificate.lean: OK
+Alternation.lean: OK
+RuntimeBounds.lean: OK
+GibbsStop.lean: OK
+DenseChecks.lean: OK
+CacheReuse.lean: OK
+CachedKernel.lean: OK
+PairedCertificate.lean: OK
+SummaryBridge.lean: OK
+SquaredGeometry.lean: OK
+CertifiedExit.lean: OK
+Audit.lean: OK
