@@ -64,6 +64,20 @@ The earlier general-purpose RGB prototype was slower than its strongest baseline
 
 ## Read and reproduce
 
+[Download the original Residual Sinkhorn 0.2.0 wheel](downloads/residual_sinkhorn-0.2.0-py3-none-any.whl). Requires Python 3.10+, NumPy 1.24+, and POT 0.9.7 or 0.9.7.post1. This is a separate adapter; it does not modify POT.
+
+```sh
+python -m pip install ./residual_sinkhorn-0.2.0-py3-none-any.whl
+```
+
+```python
+from residual_sinkhorn import sinkhorn
+
+plan = sinkhorn(a, b, M, reg)
+```
+
+SHA-256: `d7099ea4dbad90242bf7318e2235c18cad579e43d3312faa8bfc76e78c854759`
+
 - [Measured comparisons and scripts](EVIDENCE.md).
 - [Benchmark measurements, sources, and reproduction scope](EVIDENCE.md). No third-party datasets are redistributed here.
 
