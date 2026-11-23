@@ -64,6 +64,20 @@ The earlier general-purpose RGB prototype was slower than its strongest baseline
 
 ## Read and reproduce
 
+### Residual Sinkhorn 0.2.1 (Windows import fix)
+
+[Download the 0.2.1 wheel](downloads/residual_sinkhorn-0.2.1-py3-none-any.whl). If the `ctypes` lookup raises `TypeError` at import, the adapter now uses the existing NumPy comparison. The solver and stopping rules are unchanged. Focused import and cache tests passed on Windows (Python 3.12) and Linux with NumPy; they did not exercise delegation to POT. The full comparison on Windows with Python 3.13 and a native macOS run have not been independently repeated.
+
+```sh
+python -m pip install ./residual_sinkhorn-0.2.1-py3-none-any.whl
+```
+
+The import and requirements are unchanged (see below). SHA-256: `2dd71e8c65e771e7b0414110b40b6713b893b07d9168d02e7105ad3d175c05a1`
+
+### Original 0.2.0 wheel for reproduction
+
+The original 0.2.0 wheel and its checksum below are unchanged. Version 0.2.1 is not a new benchmark; benchmark versions remain as recorded in [the evidence notes](EVIDENCE.md).
+
 [Download the original Residual Sinkhorn 0.2.0 wheel](downloads/residual_sinkhorn-0.2.0-py3-none-any.whl). Requires Python 3.10+, NumPy 1.24+, and POT 0.9.7 or 0.9.7.post1. This is a separate adapter; it does not modify POT.
 
 ```sh
