@@ -2,6 +2,20 @@
 
 The [technical note (PDF)](../Brenier_Endpoint_Moment_Tool.pdf) extracts a finite comparison of raw cell moments from the midpoint coupling in [Section 4 of the source preprint](https://github.com/openai/math/blob/4eaee87548250b2682affda7d05d947c05554bae/preprints/Sharp-One-Third-Stability-of-Brenier-Maps-September-25-2026/build/source/sections/moments.tex#L8-L32). Under uniform volume on a compact convex body, the estimate compares two collections of power cells at the same sites, including cells that vanish at one endpoint. It replaces the differentiated cell-mass calculation in an alternate proof of the same one-third stability theorem.
 
+## Which results use the estimate?
+
+```mermaid
+flowchart TD
+  P["Original Brenier midpoint coupling"] --> E["Finite endpoint-moment estimate"]
+  E --> A["Alternate one-third stability proof"]
+  E --> S["Horizontal estimate → semi-geostrophic overlap bound"]
+  E -.->|suggests the application| R["Sequential ranks: direct McCann argument"]
+  E -.->|motivates the directional moment viewpoint| L["Exact Lloyd orbit"]
+  E -.->|motivates the residual viewpoint| K["Sinkhorn: separate finite-kernel proof"]
+```
+
+Solid arrows mean that the argument uses the estimate; dotted arrows are motivation. [Community submission #87](https://github.com/mathcommunity/oai-math-revised/issues/87) records the comparison and its downstream uses.
+
 ## What the idea led to
 
 | Note | What is proved | Role of the tool |

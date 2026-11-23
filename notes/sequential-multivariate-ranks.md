@@ -1,5 +1,7 @@
 # Sequential estimation of multivariate ranks
 
+[Complete written proof (PDF)](sequential-multivariate-ranks-proof.pdf)
+
 How much does not knowing the correct predictive law change the multivariate rank of the **same observation**? Over a worst-case list of $M$ candidate path laws, the cumulative expected squared error over $T$ observations is of order $\min(T,\log M)$. Within a fixed smooth one-parameter family, the worst-case order is $\log(1+T)$ even for observations that are i.i.d. conditional on the parameter.
 
 ## A one-observation bound

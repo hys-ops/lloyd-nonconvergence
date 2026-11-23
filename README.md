@@ -27,6 +27,20 @@ We extracted a finite cell-moment comparison from the midpoint coupling in [the 
 
 We kept the same starting quantity, the first moment of a cell. For an antipodal pair it is a hemisphere moment, and the directional moment function $H$ encodes the exact update through its spherical gradient. We used this form to construct a nonconvergent orbit in three dimensions, then extended the orbit construction and moment realization to every $n\geq3$. The exact proof uses the directional identity above rather than the finite harmonic-mean bound for comparing cells. This record does not assert historical priority.
 
+## What the orbit proof uses
+
+```mermaid
+flowchart TD
+  B["Brenier midpoint coupling"] --> F["Finite endpoint-moment estimate"]
+  F -.->|first-moment viewpoint| H["Directional moment function"]
+  H --> E["Exact antipodal update via the spherical gradient"]
+  E --> S["Prescribe gradients along a nonconvergent sequence"]
+  O["Realize the potential as an angular moment of a law"] --> N["Exact nonconvergent orbit in n ≥ 3"]
+  S --> N
+```
+
+The dotted arrow records where the idea came from. The orbit proof uses the exact hemisphere-update identity, not the finite comparison bound.
+
 ## Further applications of the Brenier tool
 
 The [Brenier endpoint-moment tool page](notes/brenier-endpoint-moment-tool.md) links the original estimate and two subsequent notes: velocity comparison for semi-geostrophic vortex patches, and sequential multivariate rank estimation. The first uses the endpoint estimate directly; the second was inspired by it and admits a shorter direct proof.

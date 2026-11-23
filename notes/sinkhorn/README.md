@@ -8,6 +8,8 @@ $$
 
 Here the columns of the current plan already match their target, $q,p$ are its current and target row masses, and $\Delta$ is the log cross-ratio diameter of the shared kernel. The one-row case has zero error. [Read the complete proof](Sinkhorn_plan_error_proof.md), including the return path in the implementation.
 
+Here $k$ is the number of rows in the table. The bound assumes a finite positive kernel, positive marginal weights, and the same kernel for both tables in exact real arithmetic. The Lean endpoint `ScalingAudit.certified_exit` certifies the two added early-exit rules, not the stock POT exit or rounding behavior in float64. [The theorem and proof (PDF)](Sinkhorn_plan_error_proof.pdf) · [Written and Lean statement correspondence](Sinkhorn_plan_error_proof.md#written-versions-and-lean-correspondence).
+
 ## Why I look inside long proofs
 
 Long AI-generated proofs can contain useful arguments buried in repeated calculations. I look for those steps, pull them out into explicitly stated tools, and see whether the tools shorten a proof or unlock a different problem. A useful result should be short enough for a reader to understand the idea, with the complete argument and verification available to check. Here, a way to track what a partial input can still change eventually helped decide whether an optimal-transport iteration needed to continue.

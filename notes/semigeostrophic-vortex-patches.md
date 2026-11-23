@@ -1,5 +1,7 @@
 # Velocity stability on the overlap of semi-geostrophic vortex patches
 
+[Complete written proof (PDF)](semigeostrophic-vortex-patches-proof.pdf)
+
 **Theorem.** Let the physical reference measure be uniform on a bounded convex body in $\mathbb R^3$, invariant under rotations about the vertical axis, with horizontal radius $R_h$. Let $p_t=\rho\,\mathbf 1_{E_t}$ be a renormalized probability-density solution of the incompressible semi-geostrophic equation in geostrophic coordinates, with constant patch density $\rho>0$ and uniformly finite second moments on bounded time intervals. Assume the initial vertical support lies in an interval of length $\ell$.
 
 At each height, replace the horizontal slice of $E_0$ by the centered disk of the same area. Call the resulting set $B$ and put $q=\rho\,\mathbf 1_B$. This reference patch is stationary. The perturbation $E_t$ may be asymmetric. Define the initial horizontal impulse excess by

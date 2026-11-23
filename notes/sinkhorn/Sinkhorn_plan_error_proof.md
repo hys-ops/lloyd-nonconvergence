@@ -1,5 +1,7 @@
 # How much can a Sinkhorn marginal error move the whole transport plan?
 
+[Complete written proof (PDF)](Sinkhorn_plan_error_proof.pdf)
+
 A Sinkhorn half-step exactly matches one margin in real arithmetic. The other margin is cheap to inspect. How far can the entire current table still be from the entropic optimum? This note answers that question for a finite positive kernel. It gives two stopping tests for the same returned table, including a test that can be performed before its last scaling. Every quantity in a stopping test is available without computing the optimum.
 
 ## Where the question came from
