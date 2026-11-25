@@ -2,6 +2,8 @@
 
 The [technical note (PDF)](../Brenier_Endpoint_Moment_Tool.pdf) extracts a finite comparison of raw cell moments from the midpoint coupling in [Section 4 of the source preprint](https://github.com/openai/math/blob/4eaee87548250b2682affda7d05d947c05554bae/preprints/Sharp-One-Third-Stability-of-Brenier-Maps-September-25-2026/build/source/sections/moments.tex#L8-L32). Under uniform volume on a compact convex body, the estimate compares two collections of power cells at the same sites, including cells that vanish at one endpoint. It replaces the differentiated cell-mass calculation in an alternate proof of the same one-third stability theorem.
 
+[Read the full 14-page alternate proof (PDF)](../Brenier_One_Third_Stability_Alternate_Proof.pdf). This AI-assisted revision proves the same theorem as the 18-page source preprint; §4 gives the replacement for the differentiated cell-mass argument. The endpoint-moment inequality was checked in Lean; the full 14-page argument was not formally verified.
+
 ## Which results use the estimate?
 
 ```mermaid
