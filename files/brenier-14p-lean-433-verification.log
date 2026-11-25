@@ -1,0 +1,56 @@
+Lean (version 4.33.1, x86_64-unknown-linux-gnu, commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6, Release)
+0df444a360eaa60ab8c11dca51a86af692955474
+'OAI.Problem358.one_third_stability_of_atomic_potential_estimate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'BrenierReplacement.one_third_stability_for_all_compact_targets' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'BrenierReplacement.one_third_stability_via_compact_body_moments' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+replaying ExactTerminal
+replaying ExactFinitePotential
+replaying ExactInterception
+replaying ExactBodyMoment
+replaying ResidualCompactTrace
+replaying OAI.Analysis.Brenier.AtomicPaths
+
+--- Manuscript constant and original sharpness ---
+Lean (version 4.33.1, x86_64-unknown-linux-gnu, commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6, Release)
+REUSE OAI.Analysis.Brenier.AffineCertificate
+REUSE OAI.Analysis.Brenier.Basic
+REUSE OAI.Analysis.Brenier.AffineTies
+REUSE OAI.Analysis.Brenier.CompactMeasure
+REUSE OAI.Analysis.Brenier.Optimality
+REUSE OAI.Analysis.Brenier.AffineOptimality
+BUILD OAI.Analysis.Brenier.Cube
+REUSE OAI.Analysis.Brenier.Argmax
+REUSE OAI.Analysis.Brenier.Atomic
+REUSE OAI.Analysis.Brenier.Wasserstein
+BUILD OAI.Analysis.Brenier.SharpTargets
+BUILD OAI.Analysis.Brenier.SharpMaps
+BUILD OAI.Analysis.Brenier.SharpOptimality
+BUILD OAI.Analysis.Brenier.SharpRectangle
+BUILD OAI.Analysis.Brenier.Sharpness
+Source module: OriginalThreeAtomSharpness
+'OAI.Problem358.one_third_exponent_is_sharp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BrenierReplacement.exact_three_atom_map_distance_square' depends on axioms: [propext, Classical.choice, Quot.sound]
+Source module: CoordinateProjectionStrip
+'BrenierReplacement.coordinate_boundary_strip_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+Source module: CoordinateInterpolation
+'BrenierReplacement.integral_norm_sub_sq_le_of_coordinate_strips' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Source module: ExactManuscriptConstant
+'BrenierReplacement.manuscriptConstant_normalized_interpolation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'BrenierReplacement.one_third_stability_with_manuscript_constant' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+replaying OriginalThreeAtomSharpness
+replaying OAI.Analysis.Brenier.Sharpness
+replaying CoordinateProjectionStrip
+replaying CoordinateInterpolation
+replaying ExactManuscriptConstant
