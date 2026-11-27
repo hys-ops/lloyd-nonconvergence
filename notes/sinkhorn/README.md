@@ -10,6 +10,25 @@ Here the columns of the current plan already match their target, $q,p$ are its c
 
 Here $k$ is the number of rows in the table. The bound assumes a finite positive kernel, positive marginal weights, and the same kernel for both tables in exact real arithmetic. The Lean endpoint `ScalingAudit.certified_exit` certifies the two added early-exit rules, not the stock POT exit or rounding behavior in float64. [The theorem and proof (PDF)](Sinkhorn_plan_error_proof.pdf) · [Written and Lean statement correspondence](Sinkhorn_plan_error_proof.md#written-versions-and-lean-correspondence).
 
+## Residual Sinkhorn 0.3.0 preview
+
+Version 0.3.0 is our integrated dense NumPy prototype for an explicit tolerance on the **entire returned transport plan**. This is a research preview: POT has not shipped this option, and the downloadable standalone wheels below are unchanged.
+
+- **0.1.0** already avoided a row-scaled kernel copy, reused matrix-vector products, and used a plan-TV budget of `stopThr/4` for early-exit checks. **0.2.0** added automatic kernel caching and explicit fixed-cost preparation. In both versions, ordinary checkpoints could still stop on the marginal criterion alone.
+- **0.2.1** fixed a Windows import failure without changing the solver's stopping rules.
+- **0.3.0** combines those implementation changes with a user-settable full-plan TV target in the proposed POT integration. The opt-in path checks both marginal residuals and a full-plan TV estimate and reports failure rather than treating a missed TV target as success. It skips part of the directional calculation only when that work cannot change the current decision or the next check; the new scheduling and skip decisions use the observed residuals rather than an absolute regularization value. The underlying bound already depended on the kernel, which is unchanged when cost and regularization are rescaled together in exact arithmetic. Omitting `plan_tol` in the proposed integration keeps POT's ordinary behavior.
+
+The mathematical bounds concern exact arithmetic. The implementation reports a float64 estimate rather than an interval-certified value. The preview targets classic dense NumPy float64 with a single target histogram, positive probability marginals, and a numerically usable positive kernel.
+
+### Checks for the 0.3.0 preview
+
+- The revised strict prototype and its immediate strict predecessor returned bit-identical plans and the same stopping iterations in 5,558 one-thread calls. In a separate check, the POT port matched the revised prototype on 5,558 replay calls. These two comparisons test consistency; neither is a speed benchmark.
+- In a planted 64 × 128 example, standard POT stopped after 51 updates with observed full-plan TV `6.14e-8`. The candidate with `plan_tol=2.5e-8` stopped after 58 updates with observed TV `8.77e-9` (estimated upper bound `2.28e-8`).
+- At 270 positions compared with a planted or tighter numerical reference, the revised strict prototype missed the stated full-plan goal at 0 positions; stock POT exceeded that same goal at 113 positions. Stock POT was asked to meet a marginal tolerance, not the additional full-plan target.
+- In balanced timing repeats across 27 fixtures, the final selector change was 0.21% slower at one BLAS thread and 0.03% faster at four. We found no reproducible additional speedup from that change.
+
+See [POT issue #934](https://github.com/PythonOT/POT/issues/934) for the original proposal and @xihaian251's [independent POT integration and measurements](https://github.com/PythonOT/POT/issues/934#issuecomment-7093226887) and [reproduction of the 0.2.0 adapter](https://github.com/PythonOT/POT/issues/934#issuecomment-7125539333). Earlier benchmarks below refer to their stated versions and output contracts.
+
 ## Why I look inside long proofs
 
 Long AI-generated proofs can contain useful arguments buried in repeated calculations. I look for those steps, pull them out into explicitly stated tools, and see whether the tools shorten a proof or unlock a different problem. A useful result should be short enough for a reader to understand the idea, with the complete argument and verification available to check. Here, a way to track what a partial input can still change eventually helped decide whether an optimal-transport iteration needed to continue.
