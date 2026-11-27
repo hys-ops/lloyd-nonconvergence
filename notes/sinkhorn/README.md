@@ -12,30 +12,57 @@ Here $k$ is the number of rows in the table. The bound assumes a finite positive
 
 ## Residual Sinkhorn 0.3.0 preview
 
-Version 0.3.0 is our integrated dense NumPy prototype for an explicit tolerance on the **entire returned transport plan**. This is a research preview: POT has not shipped this option, and the downloadable standalone wheels below are unchanged.
+The proposed POT integration speeds up supported classic dense NumPy Sinkhorn calls without requiring new arguments or a tighter accuracy target. Its latest change extends that acceleration to **ordinary warm starts**, including calls that request the scaling log for the next frame. This is a research preview, not a released POT feature. The standalone wheels below are unchanged.
 
-- **0.1.0** already avoided a row-scaled kernel copy, reused matrix-vector products, and used a plan-TV budget of `stopThr/4` for early-exit checks. **0.2.0** added automatic kernel caching and explicit fixed-cost preparation. In both versions, ordinary checkpoints could still stop on the marginal criterion alone.
-- **0.2.1** fixed a Windows import failure without changing the solver's stopping rules.
-- **0.3.0** combines those implementation changes with a user-settable full-plan TV target in the proposed POT integration. The opt-in path checks both marginal residuals and a full-plan TV estimate and reports failure rather than treating a missed TV target as success. It skips part of the directional calculation only when that work cannot change the current decision or the next check; the new scheduling and skip decisions use the observed residuals rather than an absolute regularization value. The underlying bound already depended on the kernel, which is unchanged when cost and regularization are rescaled together in exact arithmetic. Omitting `plan_tol` in the proposed integration keeps POT's ordinary behavior.
+- **Default calls.** The candidate brings the 0.2.0 adapter's marginal-only acceleration and automatic fixed-cost caching to supported POT calls. It does not form a second, row-scaled Gibbs kernel and reuses matrix-vector products. Cache reuse checks the full cost array. A supported unseeded call can return between regular checkpoints using an auxiliary bound and a check of the returned marginals; at regular checkpoints it does not have to meet that auxiliary bound.
+- **Warm starts.** In addition to the usual checks at updates 1, 11, 21, and so on, the solver checks the existing marginal tolerance after updates 2, 3 and 4. An early return checks both marginals on the returned matrix. With `log=True`, it includes the terminal error and scaling vectors. This is useful in repeated solves such as point-cloud registration, where a previous solution can be a good initial guess. No full-plan accuracy target is added.
+- **Optional whole-plan accuracy.** Callers can separately pass `plan_tol` to request a TV tolerance on the entire transport matrix, measured against the optimum of the same entropically regularized problem. This mode checks both marginal residuals and a float64 TV estimate. It reports failure if it cannot honor an explicit request. The estimate uses bounds proved in exact arithmetic; it is not a floating-point interval certificate. The implementation shares residual work with a capped direct bound, can save a transpose product via a pre-row check on wide inputs, and only runs the directional estimate when residual progress suggests it could help.
+- **Scope.** The accelerated route is for supported positive, single-target-histogram dense NumPy float64 problems. Ordinary unsupported requests, other backends, and unseeded calls that ask for logging use the existing solver. The cost-only `sinkhorn2` interface, the standalone `prepare(...)` API, and the grid and compressed-output experiments are outside this integration. Standalone 0.2.1 was a Windows import fix, not a solver change.
 
-The mathematical bounds concern exact arithmetic. The implementation reports a float64 estimate rather than an interval-certified value. The preview targets classic dense NumPy float64 with a single target histogram, positive probability marginals, and a numerically usable positive kernel.
+### Warm-start registration at the same marginal tolerance
 
-### How the candidate decides when to stop
+These are the eight registration settings in which 0.2.0 had previously timed slower than stock. All methods used the same starting data and iteration budgets, requested `stopThr=1e-7` and did not request `plan_tol`. Each closed-loop run generated its own subsequent poses and initial guesses. The terminal-window runs instead shared the same inputs and initial guesses. Figures are median elapsed milliseconds over 48 order-balanced rounds on one pinned CPU core and one BLAS thread.
 
-- **Tighter direct bound and shared work.** After the row update, the full-plan bound uses the smaller of the original column-based coefficient and the number of rows. The direct test uses one column residual for both checks. If its L1 norm is below `stopThr`, the column L2 test passes immediately. The solver still checks both marginal L2 errors on the materialized plan before returning. It reuses matrix-vector products across iterations without forming a second scaled copy of the kernel.
-- **Earlier check for wide inputs.** With at least four times as many columns as rows, the solver can use the row residual of the column-normalized iterate to bound the full-plan error after the next row update. If that bound passes, it still performs the row update, but skips the ensuing transpose matrix-vector product. It retains the pre-row estimate and checks both marginals on the returned matrix.
-- **Directional bound.** The solver uses the difference between the current and previous checked column residuals to extrapolate toward a smaller residual. It combines a relative-entropy bound for that extrapolation with a bound on the residual left over. This estimates the error of the **current** plan using only vectors, without forming or returning an extrapolated transport matrix. On a directional exit it recomputes the estimate on the materialized plan.
-- **When the directional check pays.** For matrices with more than 4,096 entries, the directional check can first run at update 11, once the column TV residual is below the full-plan target and meets any retry threshold. If recent progress predicts that the direct estimate will reach the target within four more updates, the solver skips the directional probe. After a failed probe, it waits for the residual to fall to 25–90% of its last value, depending on how far the estimate was from the target. If the nonnegative residual contribution alone reaches four times the target, the probe cannot pass and the retry factor is already fixed at 25%, so it skips the entropy calculation. The schedule does not use a cutoff on the absolute regularization value.
-- **Integration scope.** The opt-in path uses a bounded, thread-local cache and verifies the whole cost array before reuse. It accepts POT's two finite float64 log-scalings, initializes from the row scaling and recomputes the column scaling at the first update. For warm starts with more than 4,096 entries it also checks each of the first four updates. Omitting `plan_tol` uses POT's existing solver. The separate marginal-only acceleration, standalone `prepare(...)` API, and grid and compressed-RGB experiments are outside this candidate.
+| Setting | Stock POT | Adapter 0.2.0 | Candidate 0.3.0 |
+|---|---:|---:|---:|
+| Bunny, 192 points, reg 0.08, 56 frames | 33.66 | 34.00 | 22.34 |
+| Bunny, 192 points, reg 0.24, 56 frames | 26.17 | 26.36 | 17.13 |
+| Bunny, 512 points, reg 0.08, 56 frames | 152.35 | 152.97 | 113.22 |
+| Two-lobe cloud, 384 points, reg 0.08, 56 frames | 61.06 | 60.93 | 50.88 |
+| Two-lobe cloud, 384 points, reg 0.24, 56 frames | 53.81 | 54.24 | 47.25 |
+| Bunny, 192 points, reg 0.08, final 8 frames | 3.02 | 3.03 | 1.86 |
+| Bunny, 192 points, reg 0.24, final 8 frames | 1.85 | 1.85 | 1.83 |
+| Bunny, 512 points, reg 0.24, final 8 frames | 13.39 | 13.39 | 10.96 |
 
-### Checks for the 0.3.0 preview
+Seven of eight settings had paired timing intervals favoring the candidate over stock. The five 56-frame runs took **12–35% less time** than stock. For the 192-point terminal window at regularization 0.08, updates fell **58→13**, and elapsed time fell **3.02→1.86 ms**. Changing only the check schedule in the same implementation took **2.33→1.88 ms**. The 192-point terminal window at 0.24 already finished in one update per frame and showed no clear improvement.
 
-- The revised strict prototype and its immediate strict predecessor returned bit-identical plans and the same stopping iterations in 5,558 one-thread calls. In a separate check, the POT port matched the revised prototype on 5,558 replay calls. These two comparisons test consistency; neither is a speed benchmark.
-- In a planted 64 × 128 example, standard POT stopped after 51 updates with observed full-plan TV `6.14e-8`. The candidate with `plan_tol=2.5e-8` stopped after 58 updates with observed TV `8.77e-9` (estimated upper bound `2.28e-8`).
-- At 270 positions compared with a planted or tighter numerical reference, the revised strict prototype missed the stated full-plan goal at 0 positions; stock POT exceeded that same goal at 113 positions. Stock POT was asked to meet a marginal tolerance, not the additional full-plan target.
-- In balanced timing repeats across 27 fixtures, the final selector change was 0.21% slower at one BLAS thread and 0.03% faster at four. We found no reproducible overall speedup over the preceding strict solver. The fix does remove a slowdown in the experimental size-and-regularization rule: on 54 synthetic cases after jointly rescaling cost and regularization, that rule took 56.83 ms versus 53.80 ms with the final selector (53.68 ms with the preceding strict solver). On 23 similarly rescaled MNIST pairs, it restored the earlier 1,032 updates instead of the experimental rule's 1,219.
+Both marginal errors met `1e-7` in all 304 returned candidate plans. Earlier exits can increase full-plan TV error even when they meet the same marginal tolerance: at one frame of the 512-point 0.08 run the observed TV error against each solver's tighter numerical reference was about `3.55e-8` for stock and `1.43e-6` for the candidate. The largest observed change in the final rotation matrix across the five live jobs was `3.46e-7` in Frobenius norm. Those are measured examples, not a guarantee for other inputs.
 
-See [POT issue #934](https://github.com/PythonOT/POT/issues/934) for the original proposal and @xihaian251's [independent POT integration and measurements](https://github.com/PythonOT/POT/issues/934#issuecomment-7093226887) and [reproduction of the 0.2.0 adapter](https://github.com/PythonOT/POT/issues/934#issuecomment-7125539333). Earlier benchmarks below refer to their stated versions and output contracts.
+### Other default-call benchmarks
+
+These 160 settings were remeasured at the same requested marginal accuracy and iteration budgets, again without `plan_tol`. Times are sums of setting-level medians in milliseconds over 12 order-balanced rounds, one pinned CPU core and one BLAS thread. The comparison uses the stock classic POT solver and the original 0.2.0 adapter.
+
+| Workload | Calls | Stock POT | Adapter 0.2.0 | Candidate 0.3.0 |
+|---|---:|---:|---:|---:|
+| Original 27 dense settings | 27 | 105.06 | 61.52 | 62.32 |
+| Eight independent reproduction inputs, cold cache | 8 | 27.51 | 10.92 | 10.65 |
+| Same eight inputs, warm cache | 8 | 26.75 | 9.28 | 9.26 |
+| Four basic fixtures | 4 | 2.13 | 1.01 | 1.03 |
+| 84 planted-plan fixtures | 84 | 67.21 | 29.91 | 29.92 |
+| 900 MNIST pairs × three regularizations | 2700 | 1,584.69 | 833.53 | 830.81 |
+| 625 MNIST pairs × three regularizations | 1875 | 1,091.99 | 583.87 | 578.82 |
+| RGB palette, full dense plans | 64 | 989.55 | 623.15 | 614.51 |
+| Fixed cost matrices | 36 | 65.08 | 41.99 | 42.42 |
+| Cost reuse, copies and changes | 147 | 273.06 | 186.65 | 188.80 |
+| graspologic graph alignment | 400 | 779.07 | 696.03 | 693.28 |
+| Bunny 512, final 8 frames, reg 0.08 | 8 | 12.23 | 11.86 | 9.89 |
+| Bunny 512, 56 frames, reg 0.24 | 56 | 114.90 | 115.22 | 84.70 |
+
+All 5,417 candidate calls in this additional replay met the requested marginal tolerance. Outside the two registration rows, the 5,353 returned plans matched 0.2.0 byte for byte. Most of the speedup in those rows was already present in 0.2.0. The graph replay preserved all 209 final row-wise matches against stock. Of the 19 settings that initially ran more than 5% slower than 0.2.0, none remained over that threshold after a targeted 30-round retest.
+
+**Where the candidate can be slower.** In a separate synthetic warm-start test, stock already finished in one update at 8×8 and 32×128. The candidate added about 23 microseconds per cold call (29.9→53.1 µs and 46.0→68.9 µs). On those same sizes, when the initial guess was farther away and stock ran 11 updates, the candidate was about 1.7× as fast. A separate unsafe-kernel fixture that immediately returned with a numerical warning took 70.2→88.4 µs with the same result and warning. These tests do not support a universal speedup.
+
+The native Linux suite recorded **1,585 passed, 170 skipped and 4 expected failures**. See [POT issue #934](https://github.com/PythonOT/POT/issues/934) for the original proposal and [@xihaian251's independent reproduction](https://github.com/xihaian251/sinkhorn-reproduction/releases/tag/v1.0.0) for two earlier implementation optimizations under the standard POT stopping rule. The timings above are our measurements of this candidate, not independent timings. Earlier benchmarks below refer to their stated versions and output requirements.
 
 ## Why I look inside long proofs
 
